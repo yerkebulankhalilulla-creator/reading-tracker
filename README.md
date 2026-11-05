@@ -1,4 +1,5 @@
  Reading Tracker
+ 
 A command-line application written in C that helps users manage their personal book collection and track their reading activity.
 
 Overview
