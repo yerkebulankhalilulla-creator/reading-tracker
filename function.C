@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <time.h>
 
 #define MAX_BOOKS 100
 
@@ -13,6 +14,7 @@ struct book
 void ShowM(void);
 void AddBook(struct book books[], int *count);
 void GetM(struct book books[], int *count);
+void ShowB(struct book books[], int *count);
 
 void ShowM(void)
 {
@@ -65,13 +67,73 @@ void AddBook(struct book books[], int *count)
     printf("Book added successfully!\n");
 }
 
+void ShowB(struct book books[], int *count)
+{
+    if ( *count == 0 )
+    {
+        printf("No added book yet.\n");
+    }
+
+    else{
+
+        for ( int i = 0; i < *count; ++i)
+        {
+            printf("%d) %s - by %s\n", i + 1, books[i].title, books[i].author);
+        }         
+    }
+}
+
+
+void StartR(struct book books[], int *count)
+{
+    int choice;
+
+    if ( *count == 0 )
+    {
+        printf("First add a book.\n");
+    }
+
+    else
+    {
+        ShowB(books, *count);
+
+        printf( "To start reading just choose a number of book.\n" );
+    
+        if(scanf("%d", &choice) != 1 || choice > *count || choice < *count)
+        {
+            printf("Incorrect input\n");
+        }
+
+        else 
+        {
+               time_t current_time;
+               current_time = time(NULL);
+        }
+
+
+
+    }
+
+
+
+}
+
+
+
+
+void Timer()
+
+
+
+
+
 void GetM(struct book books[], int *count)
 {
     int choice;
 
     while (1)
-    {
-        ShowM();
+    {  
+        ShowM(); //
 
         int result = scanf("%d", &choice);
 
@@ -99,7 +161,7 @@ void GetM(struct book books[], int *count)
                 break;
 
             case 2:
-                printf("Show all books - coming soon!\n");
+                ShowB(books, count);
                 break;
 
             case 3:
