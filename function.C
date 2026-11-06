@@ -9,12 +9,15 @@ struct book
     char title[100];
     char author[100];
     int pages;
+    double ReadingTime;
 };
 
 void ShowM(void);
 void AddBook(struct book books[], int *count);
 void GetM(struct book books[], int *count);
-void ShowB(struct book books[], int *count);
+void ShowB(struct book books[], int count);
+void ShowS(struct book books[], int count);
+
 
 void ShowM(void)
 {
@@ -61,22 +64,22 @@ void AddBook(struct book books[], int *count)
         printf("Invalid number of pages!\n");
         return;
     }
-
+    books[*count].ReadingTime = 0;
     (*count)++;
 
     printf("Book added successfully!\n");
 }
 
-void ShowB(struct book books[], int *count)
+void ShowB(struct book books[], int count)
 {
-    if ( *count == 0 )
+    if ( count == 0 )
     {
         printf("No added book yet.\n");
     }
 
     else{
 
-        for ( int i = 0; i < *count; ++i)
+        for ( int i = 0; i < count; ++i)
         {
             printf("%d) %s - by %s\n", i + 1, books[i].title, books[i].author);
         }         
@@ -86,7 +89,11 @@ void ShowB(struct book books[], int *count)
 
 void StartR(struct book books[], int *count)
 {
-    int choice;
+
+    time_t start, end;
+    double duration;
+    int choosenB;
+    int StopR;
 
     if ( *count == 0 )
     {
@@ -99,32 +106,69 @@ void StartR(struct book books[], int *count)
 
         printf( "To start reading just choose a number of book.\n" );
     
-        if(scanf("%d", &choice) != 1 || choice > *count || choice < *count)
+        if(scanf("%d", &choosenB) != 1 || choosenB > *count || choosenB < 1)
         {
             printf("Incorrect input\n");
+            return;
         }
+        
 
-        else 
+        printf("to stop reading click 0.\n");
+        
+        start = time(NULL);
+        while(1)
         {
-               time_t current_time;
-               current_time = time(NULL);
+            
+
+            if (scanf("%d", &StopR) != 1 )
+            {
+                printf("Invalid input.\n");
+                printf("Try again.\n");
+                continue;
+            }
+            
+            if ( StopR == 0)
+            {
+                end = time(NULL);
+                break;
+            }  
         }
+        
+        duration = difftime(end, start);
+        books[choosenB - 1].ReadingTime += duration;
 
 
+        printf("Reading time: %.2lf minutes\n", duration / 60.0);
+        
 
+    }
+}
+
+void ShowS(struct book books[], int count)
+{
+    if ( count == 0 )
+    {
+        printf("No added book yet.\n");
+        return;
     }
 
 
+    else
+    {
+
+        for ( int i = 0; i < count; ++i ) 
+        {   
+            int hours = (int)books[i].ReadingTime / 3600;
+            int minutes  = (int)books[i].ReadingTime % 3600 / 60;
+            int seconds = (int)books[i].ReadingTime % 60;
+
+            printf("%d) %s - by %s\n", i + 1, books[i].title, books[i].author);
+            printf("Reading time: %dh %dm %ds", hours, minutes, seconds);
+            printf("\n");
+        }       
+    }
 
 }
-
-
-
-
-void Timer()
-
-
-
 
 
 void GetM(struct book books[], int *count)
@@ -161,15 +205,15 @@ void GetM(struct book books[], int *count)
                 break;
 
             case 2:
-                ShowB(books, count);
+                ShowB(books, *count);
                 break;
 
             case 3:
-                printf("Start reading - coming soon!\n");
+                StartR(books, count);
                 break;
 
             case 4:
-                printf("Statistics - coming soon!\n");
+                ShowS(books, *count);
                 break;
 
             case 0:
@@ -190,5 +234,21 @@ int main(void)
 
     GetM(books, &count);
 
+
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
